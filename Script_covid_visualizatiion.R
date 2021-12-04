@@ -32,6 +32,7 @@ Covid_to_plot = myCovidData %>%
             totalRecovered = sum(Recovered),
             totalDeath = sum(Deaths)
   )
+Covid_to_plot
 
 # plot overview
 ggpairs(df_to_plot)
@@ -42,9 +43,18 @@ ggpairs(df_to_plot)
 # simple plot of confirmed cases by region
 ggplot(Covid_to_plot, aes(x=as.character(WHO.Region), y=totalConfirmed)) + geom_bar(stat='identity')
 
+# remove the total_confirmed column
+Covid_to_plot$totalConfirmed <- NULL
+
+# tibble from wide to long format
+Covid_to_plot_long = melt(Covid_to_plot, id.vars=c("WHO.Region"))
+Covid_to_plot_long
 
 
-
+# MINIMAL WORKING EXAMPLE
+# Stacked + percent
+ggplot(Covid_to_plot_long, aes(fill=variable, y=value, x=as.character(WHO.Region))) + 
+  geom_bar(position="fill", stat="identity")
 
 
 
