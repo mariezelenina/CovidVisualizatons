@@ -28,9 +28,9 @@ Covid_to_plot = myCovidData %>%
   group_by(WHO.Region) %>% 
   summarise(num = n(),
             totalConfirmed = sum(Confirmed),
-            totalActive = sum(Active),
-            totalRecovered = sum(Recovered),
-            totalDeath = sum(Deaths)
+            Active = sum(Active),
+            Recovered = sum(Recovered),
+            Death = sum(Deaths)
   )
 Covid_to_plot
 
@@ -49,6 +49,7 @@ Covid_to_plot$totalConfirmed <- NULL
 # tibble from wide to long format
 Covid_to_plot_long = melt(Covid_to_plot, id.vars=c("WHO.Region"))
 Covid_to_plot_long
+Covid_to_plot_long = Covid_to_plot_long[-c(1, 2, 3, 4, 5, 6), ]
 
 
 # MINIMAL WORKING EXAMPLE
@@ -56,8 +57,43 @@ Covid_to_plot_long
 ggplot(Covid_to_plot_long, aes(fill=variable, y=value, x=as.character(WHO.Region))) + 
   geom_bar(position="fill", stat="identity")
 
+# change names of axes
+ggplot(Covid_to_plot_long, aes(fill=variable, y=value, x=as.character(WHO.Region))) + 
+  geom_bar(position="fill", stat="identity") +
+  xlab("WHO Region") +
+  ylab("% of cases")
+
+# change name of legend
+ggplot(Covid_to_plot_long, aes(fill=variable, y=value, x=as.character(WHO.Region))) + 
+  geom_bar(position="fill", stat="identity") +
+  xlab("WHO Region") +
+  ylab("% of cases") +
+  labs(x = "", fill = "Outcome")
+
+# change theme
+ggplot(Covid_to_plot_long, aes(fill=variable, y=value, x=as.character(WHO.Region))) + 
+  geom_bar(position="fill", stat="identity") +
+  xlab("WHO Region") +
+  ylab("% of cases") +
+  labs(x = "", fill = "Outcome") +
+  theme_bw()
+  
+# change colors of bars
+ggplot(Covid_to_plot_long, aes(fill=variable, y=value, x=as.character(WHO.Region))) + 
+  geom_bar(position="fill", stat="identity") +
+  xlab("WHO Region") +
+  ylab("% of cases") +
+  labs(x = "", fill = "Outcome") +
+  theme_bw() +
+  scale_fill_manual(values = c(" lightskyblue4", "aquamarine3", "snow4"))
 
 
-
-
-
+# x-axis labels at 45 degrees
+ggplot(Covid_to_plot_long, aes(fill=variable, y=value, x=as.character(WHO.Region))) + 
+  geom_bar(position="fill", stat="identity") +
+  xlab("WHO Region") +
+  ylab("% of cases") +
+  labs(x = "", fill = "Outcome") +
+  theme_bw() +
+  scale_fill_manual(values = c(" lightskyblue4", "aquamarine3", "snow4")) +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
